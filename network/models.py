@@ -6,6 +6,13 @@ class User(AbstractUser):
     profilePicture = models.CharField(blank=True, max_length=255)
     followers = models.IntegerField(default=0)
 
+    def serialize(self):
+        return {
+            "id": self.id,
+            "username": self.username,
+        }
+
+
 class Post(models.Model):
     username = models.ForeignKey(User, on_delete=models.CASCADE, related_name="posts")
     creationDate = models.DateTimeField(auto_now=True)
@@ -19,7 +26,7 @@ class Post(models.Model):
     def serialize(self):
         return {
             "id": self.id,
-            "username": self.username,
+            "username": self.username.username,
             "creationDate": self.creationDate.strftime("%b %d %Y, %I:%M %p"),
             "post": self.post,
             "image": self.image,
