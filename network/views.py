@@ -106,3 +106,7 @@ def posts(request, post_id):
     except Post.DoesNotExist:
         return JsonResponse({"error": "Post doesn't exixts"}, status = 404)
     return JsonResponse(post.serialize())
+
+
+def createpost(request):
+    return HttpResponse("From Received")
