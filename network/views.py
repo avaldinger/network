@@ -3,12 +3,50 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
+from django import forms
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Layout, Submit, Row, Column
 
 from .models import User, Post
 
+class PostForm(forms.ModelForm):
+    # description = forms.CharField(widget=forms.Textarea)
+
+    class Meta:
+        model = Post
+        exclude = ['username', 'creationDate', 'likes']
+        widgets = {
+            'post': forms.Textarea(attrs={'cols': 30, 'rows': 3, 'style': 'width: 100%'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["post"].widget.attrs["placeholder"] = "What are you thinking?"
+        self.fields["post"].widget.attrs["autocomplete"] = "off"
+        self.fields["post"].required = True
+        self.fields["image"].widget.attrs["placeholder"] = "Add a fancy Image!"
+        self.fields["image"].widget.attrs["autocomplete"] = "off"
+        self.fields["image"].required = False
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            Row(
+            'image', css_class='form-group col-md-6 mb-0',
+            ),
+            Row(
+            'description', css_class='form-group col-md-7 mb-0',
+            ),
+            Submit('submit', 'Post')
+        )
+
 
 def index(request):
-    return render(request, "network/index.html")
+    form =  PostForm()
+    posts = Post.objects.all()
+    username = request.user
+    user = User.objects.get(username=username.username)
+    return render(request, "network/index.html", {
+        "posts": posts, "user": user, "form": form
+    })
 
 
 def login_view(request):
@@ -33,7 +71,7 @@ def login_view(request):
 
 def logout_view(request):
     logout(request)
-    return HttpResponseRedirect(reverse("index"))
+    return render(request, "network/login.html")
 
 
 def register(request):
