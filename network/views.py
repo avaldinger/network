@@ -6,6 +6,7 @@ from django.urls import reverse
 from django import forms
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, Row, Column
+from datetime import datetime
 
 from .models import User, Post
 
@@ -109,4 +110,15 @@ def posts(request, post_id):
 
 
 def createpost(request):
+    if request.method == "POST":
+        form = PostForm(request.POST)
+        username = request.user
+        # Check form and save entry to the DataBase
+        if form.is_valid():
+            post = form.cleaned_data["post"]
+            image = form.cleaned_data["image"]
+            newPost = Post(post=post,  image=image, creationDate=datetime.now(), username=username)
+            newPost.save()
+            return HttpResponse("Post saved")
+        return HttpResponse("Incorrect input")
     return HttpResponse("From Received")
