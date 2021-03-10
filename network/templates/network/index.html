@@ -1,6 +1,8 @@
 {% extends "network/layout.html" %}
+{% load static %}
 
 {% block body %}
+
 <br>
 
 <!-- Porfile Information -->
@@ -58,6 +60,9 @@
                         <div class="btn-group">
                             <button type="submit" class="btn btn-primary">Post</button>
                         </div>  
+                        <div>
+                            
+                        </div> 
                     </div>
                 </div>
             </div>
@@ -94,11 +99,34 @@
                     </p>
                 </div>
                 <div class="card-footer">
-                    <a href="#" class="card-link"><i class="fa fa-gittip"></i> Like</a>
+                    <a href="" class="card-link" onclick="return  changeIcon()"><image src="{% static 'network/emptyHeart.png' %}" id="Like" width="20" height="20" alt="Like"></a>
                     <a href="#" class="card-link"><i class="fa fa-comment"></i> Comment</a>
                     <a href="#" class="card-link"><i class="fa fa-mail-forward"></i> Share</a>
                 </div>
             </div>
+            <script>
+
+                var image = document.getElementById("Like")
+                var baseURL = "{% static 'network/FullHeart.png' %}"
+                console.log(image)
+                console.log(image.src)
+                console.log(baseURL)
+
+            
+                function changeIcon() {
+                    if (image.src == "http://127.0.0.1:8000/static/network/emptyHeart.png") {
+                            console.log("Inside")
+                        image.src = "http://127.0.0.1:8000/static/network/FullHeart.png"
+                        return false;
+                    }
+                    else{
+                        image.src = "http://127.0.0.1:8000/static/network/emptyHeart.png"
+                        console.log("Else")
+                    }
+                    return false;
+                }
+            
+            </script>
             <!-- Post /////-->
 
         </div>
