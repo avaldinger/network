@@ -15,7 +15,7 @@
                         <img class="rounded-circle" align-items="center" width="80" src={{user.profilePicture}} alt="">
                     </div>
                     <div class="h5">{{user.username}}</div>
-                    <div class="h7 text-muted">Fullname : Miracles Lee Cross</div>
+                    <div class="h7 text-muted">Fullname : {{user.first_name}} {{user.last_name}}</div>
                     <div class="h7">Developer of web applications, JavaScript, PHP, Java, Python, Ruby, Java, Node.js,
                         etc.
                     </div>
@@ -27,7 +27,7 @@
                     </li>
                     <li class="list-group-item">
                         <div class="h6 text-muted">Following</div>
-                        <div class="h5">6758</div>
+                        <div class="h5">{{user.following}}</div>
                     </li>
                 </ul>
             </div>
@@ -50,7 +50,7 @@
                         <div class="tab-pane fade show active" id="posts" role="tabpanel" aria-labelledby="posts-tab">
                             <div class="form-group">
                                 <label class="sr-only" for="message">post</label>
-                                {{ form.image }}
+                                {{ form.title }} {{ form.image }} 
                                 <br><br>
                                 {{ form.post }}                              
                             </div>
@@ -70,16 +70,17 @@
             <!-- Post /////-->
             <br>
             <!--- \\\\\\\Post-->
+            {% for post in posts %}
             <div class="card gedf-card">
                 <div class="card-header">
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="mr-2">
-                                <img class="rounded-circle" width="45" src="https://picsum.photos/50/50" alt="">
+                                <img class="rounded-circle" width="45" src={{ post.username.profilePicture }} alt="">
                             </div>
                             <div class="ml-2">
-                                <div class="h5 m-0">@LeeCross</div>
-                                <div class="h7 text-muted">Miracles Lee Cross</div>
+                                <div class="h5 m-0">@{{ post.username }}</div>
+                                <div class="h7 text-muted">{{ post.username.first_name }} {{ post.username.last_name }}</div>
                             </div>
                         </div>
                         <div>
@@ -88,22 +89,24 @@
 
                 </div>
                 <div class="card-body">
-                    <div class="text-muted h7 mb-2"> <i class="fa fa-clock-o"></i>10 min ago</div>
+                    <div class="text-muted h7 mb-2"> <i class="fa fa-clock-o"></i>{{ post.creationDate }}</div>
                     <a class="card-link" href="#">
-                        <h5 class="card-title">Lorem ipsum dolor sit amet, consectetur adip.</h5>
+                        <h5 class="card-title">{{ post.title }}</h5>
                     </a>
 
                     <p class="card-text">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo recusandae nulla rem eos ipsa praesentium esse magnam nemo dolor
-                        sequi fuga quia quaerat cum, obcaecati hic, molestias minima iste voluptates.
+                        {{ post.post }}
                     </p>
                 </div>
+                
                 <div class="card-footer">
-                    <a href="" class="card-link" onclick="return  changeIcon()"><image src="{% static 'network/emptyHeart.png' %}" id="Like" width="20" height="20" alt="Like"></a>
+                    <a href="" class="card-link" onclick="return  changeIcon()"><image src="{% static 'network/emptyHeart.png' %}" id="Like" width="20" height="20" alt="Like"></a> {{ post.likes }}
                     <a href="#" class="card-link"><i class="fa fa-comment"></i> Comment</a>
                     <a href="#" class="card-link"><i class="fa fa-mail-forward"></i> Share</a>
                 </div>
             </div>
+            <br>
+            {% endfor %}
             <script>
 
                 var image = document.getElementById("Like")
@@ -117,7 +120,7 @@
                     if (image.src == "http://127.0.0.1:8000/static/network/emptyHeart.png") {
                             console.log("Inside")
                         image.src = "http://127.0.0.1:8000/static/network/FullHeart.png"
-                        return false;
+                        
                     }
                     else{
                         image.src = "http://127.0.0.1:8000/static/network/emptyHeart.png"
@@ -130,6 +133,7 @@
             <!-- Post /////-->
 
         </div>
+        
         <div class="col-md-3">
             <div class="card gedf-card">
                 <div class="card-body">

@@ -4,8 +4,8 @@ from .models import User, Post, Comment, Like, Follow
 
 # Register your models here.
 class PostAdmin(admin.ModelAdmin):
-    list_display = ("id", "username", "creationDate", "post", "likes")
-    # list_editable = ("item", "description", "category", "sold", "price", "image", "bidWinner", "createdBy")
+    list_display = ("id", "username", "creationDate", "title", "post", "likes")
+    list_editable = ("username", "title", "post", "likes")
 
 class LikeAdmin(admin.ModelAdmin):
     list_display = ("id", "likedBy", "post", "liked", "timestamp")

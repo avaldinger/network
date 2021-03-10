@@ -22,6 +22,9 @@ class PostForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields["title"].widget.attrs["placeholder"] = "Best title.."
+        self.fields["title"].widget.attrs["autocomplete"] = "off"
+        self.fields["title"].required = True
         self.fields["post"].widget.attrs["placeholder"] = "What are you thinking?"
         self.fields["post"].widget.attrs["autocomplete"] = "off"
         self.fields["post"].required = True
@@ -32,6 +35,9 @@ class PostForm(forms.ModelForm):
         self.helper.layout = Layout(
             Row(
             'image', css_class='form-group col-md-6 mb-0',
+            ),
+            Row(
+            'title', css_class='form-group col-md-7 mb-0',
             ),
             Row(
             'description', css_class='form-group col-md-7 mb-0',

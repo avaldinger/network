@@ -2,9 +2,12 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 
+
 class User(AbstractUser):
     profilePicture = models.CharField(blank=True, max_length=255)
     followers = models.IntegerField(default=0)
+    description = models.CharField(blank=True, max_length=255)
+    following = models.IntegerField(default=0)
 
     def serialize(self):
         return {
@@ -14,8 +17,9 @@ class User(AbstractUser):
 
 
 class Post(models.Model):
-    username = models.ForeignKey(User, on_delete=models.CASCADE, related_name="posts")
+    username = models.ForeignKey("User", on_delete=models.CASCADE, related_name="posts")
     creationDate = models.DateTimeField(auto_now=True)
+    title = models.CharField(blank=True, max_length=255)
     post = models.TextField(blank=True)
     image = models.CharField(blank=True, max_length=255)
     likes = models.IntegerField(default=0)
@@ -34,8 +38,8 @@ class Post(models.Model):
         }
 
 class Like(models.Model):
-    likedBy = models.ForeignKey(User, on_delete=models.CASCADE, related_name="likes")
-    post = models.ForeignKey(Post, default=None, on_delete=models.CASCADE)
+    likedBy = models.ForeignKey("User", on_delete=models.CASCADE, related_name="likes")
+    post = models.ForeignKey("Post", default=None, on_delete=models.CASCADE)
     liked = models.BooleanField(default=False)
     timestamp = models.DateTimeField(auto_now=True)
 
