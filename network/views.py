@@ -137,5 +137,5 @@ def loadProfile(request, username):
     print(userInfo.username)
     posts = Post.objects.filter(username=userInfo.id)
     return render(request, "network/profile.html", {
-        "posts": posts, "user": userInfo
+        "posts": posts, "userInfo": userInfo
     })

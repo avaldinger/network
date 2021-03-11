@@ -12,10 +12,10 @@
             <div class="card">
                 <div class="card-body">
                     <div class="mr-2">
-                        <img class="rounded-circle" align-items="center" width="80" src={{user.profilePicture}} alt="">
+                        <img class="rounded-circle" align-items="center" width="80" src={{userInfo.profilePicture}} alt="">
                     </div>
-                    <div class="h5">{{user.username}}</div>
-                    <div class="h7 text-muted">Fullname : {{user.first_name}} {{user.last_name}}</div>
+                    <div class="h5">{{userInfo.username}}</div>
+                    <div class="h7 text-muted">Fullname : {{userInfo.first_name}} {{userInfo.last_name}}</div>
                     <div class="h7">Developer of web applications, JavaScript, PHP, Java, Python, Ruby, Java, Node.js,
                         etc.
                     </div>
@@ -23,13 +23,18 @@
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">
                         <div class="h6 text-muted">Followers</div>
-                        <div class="h5">{{user.followers}}</div>
+                        <div class="h5">{{userInfo.followers}}</div>
                     </li>
                     <li class="list-group-item">
                         <div class="h6 text-muted">Following</div>
-                        <div class="h5">{{user.following}}</div>
+                        <div class="h5">{{userInfo.following}}</div>
                     </li>
                 </ul>
+                {% if userInfo.username !=  user.username %}
+                
+                    <button type="submit" class="btn btn-primary">Follow</button>
+                
+                {% endif %}
             </div>
         </div>
         <div class="col-md-6 gedf-main">
