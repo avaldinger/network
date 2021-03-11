@@ -15,9 +15,8 @@
                         <img class="rounded-circle" align-items="center" width="80" src={{userInfo.profilePicture}} alt="">
                     </div>
                     <div class="h5">{{userInfo.username}}</div>
-                    <div class="h7 text-muted">Fullname : {{userInfo.first_name}} {{userInfo.last_name}}</div>
-                    <div class="h7">Developer of web applications, JavaScript, PHP, Java, Python, Ruby, Java, Node.js,
-                        etc.
+                    <div class="h7 text-muted">Fullname: {{userInfo.first_name}} {{userInfo.last_name}}</div>
+                    <div class="h7">{{userInfo.description}}
                     </div>
                 </div>
                 <ul class="list-group list-group-flush">
@@ -73,6 +72,10 @@
                         <image src={{ post.image }} width="170" height="200">
                     </p>
                     {% endif %}
+                </div>
+                <div class="card-footer">
+                    <a href="" class="card-link" onclick="return  changeIcon()"><image src="{% static 'network/emptyHeart.png' %}" id="Like" width="20" height="20" alt="Like"></a> {{ post.likes }}
+                    <a href="#" class="card-link"><i class="fa fa-comment"></i> Comment</a>
                 </div>
             </div>
             <br>
