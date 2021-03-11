@@ -1,7 +1,7 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse
 from django import forms
 from crispy_forms.helper import FormHelper
@@ -123,8 +123,19 @@ def createpost(request):
         if form.is_valid():
             post = form.cleaned_data["post"]
             image = form.cleaned_data["image"]
-            newPost = Post(post=post,  image=image, creationDate=datetime.now(), username=username)
+            title = form.cleaned_data["title"]
+            newPost = Post(post=post,  image=image, title=title, creationDate=datetime.now(), username=username)
             newPost.save()
-            return HttpResponse("Post saved")
+            return redirect('index')
+            # return HttpResponse("Post saved")
         return HttpResponse("Incorrect input")
     return HttpResponse("From Received")
+
+def loadProfile(request, username):
+    print(username)
+    userInfo = User.objects.get(username=username)
+    print(userInfo.username)
+    posts = Post.objects.filter(username=userInfo.id)
+    return render(request, "network/profile.html", {
+        "posts": posts, "user": userInfo
+    })
