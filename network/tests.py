@@ -14,8 +14,6 @@ class NetworkTestCase(TestCase):
     def testfoundHomePage(self):
         found = resolve("/")
         self.assertEqual(found.func, index)
-        
-
 
     def testIndex(self):
         c = Client()

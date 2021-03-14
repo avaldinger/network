@@ -2,59 +2,21 @@
 {% load static %}
 
 {% block body %}
-
 <br>
 
 <!-- Porfile Information -->
 <div class="container-fluid gedf-wrapper">
     <div class="row">
-        <div class="col-md-3">
-            <div class="card">
-                <div class="card-body">
-                    <div class="mr-2">
-                        <img class="rounded-circle" align-items="center" width="80" src={{userInfo.profilePicture}} alt="">
-                    </div>
-                    <div class="h5">{{userInfo.username}}</div>
-                    <div class="h7 text-muted">Fullname: {{userInfo.first_name}} {{userInfo.last_name}}</div>
-                    <div class="h7">{{userInfo.description}}
-                    </div>
-                </div>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item">
-                        <div class="h6 text-muted">Followers</div>
-                        <div class="h5">{{userInfo.followers}}</div>
-                    </li>
-                    <li class="list-group-item">
-                        <div class="h6 text-muted">Following</div>
-                        <div class="h5">{{userInfo.following}}</div>
-                    </li>
-                </ul>
-                {{userInfo.id}}
-                {% if userInfo.username !=  user.username %}
-                    {% if followed.followedBy.id == user.id %}
-                        <a href=""><button type="submit" class="btn btn-primary">Unfollow</button></a>
-                    {% else %}
-                        <a href=""  onclick="return follow()"><button type="submit" class="btn btn-primary">Follow</button></a>
-                    {% endif %}
-                {% endif %}
-                <p id="myP"></p>
-            </div>
-
-        </div>
-        <div class="col-md-6 gedf-main">
-
-            <br>
-            <!--- \\\\\\\Post-->
-            {% for post in posts %}
+        {% for post in posts %}
             <div class="card gedf-card">
                 <div class="card-header">
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="mr-2">
-                                <img class="rounded-circle" width="45" src={{ post.username.profilePicture }} alt="">
+                                <a href="{% url 'loadProfile' post.username.username %}"><img class="rounded-circle" width="45" src={{ post.username.profilePicture }} alt=""></a>
                             </div>
                             <div class="ml-2">
-                                <div class="h5 m-0">@{{ post.username }}</div>
+                                <div class="h5 m-0"><a href="{% url 'loadProfile' post.username.username %}" style="text-decoration:none; color:black;" >@{{ post.username }}</a></div>
                                 <div class="h7 text-muted">{{ post.username.first_name }} {{ post.username.last_name }}</div>
                             </div>
                         </div>
@@ -78,6 +40,7 @@
                     </p>
                     {% endif %}
                 </div>
+                
                 <div class="card-footer">
                     <a href="" class="card-link" onclick="return  changeIcon()"><image src="{% static 'network/emptyHeart.png' %}" id="Like" width="20" height="20" alt="Like"></a> {{ post.likes }}
                     <a href="#" class="card-link"><i class="fa fa-comment"></i> Comment</a>
@@ -87,35 +50,11 @@
             {% endfor %}
             <script>
 
-                window.onload = function() {
-                        console.log("Onload..")
-                        document.querySelector('#myP').innerHTML = "Function working..."
-                };
-
                 var image = document.getElementById("Like")
                 var baseURL = "{% static 'network/FullHeart.png' %}"
                 console.log(image)
                 console.log(image.src)
                 console.log(baseURL)
-
-
-                function follow() {
-                    fetch('/follow', {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        user: {{userInfo.id}},
-                        followedBy: {{ user.id }}
-                    })
-                    })
-                    .then(response => response.json())
-                    .then(result => {
-                        // Print result
-                        console.log(result);
-                    });
-
-                }
-
-                
 
             
                 function changeIcon() {
@@ -132,10 +71,7 @@
                 }
             
             </script>
-            <!-- Post /////-->
 
-        </div>
-        
         <div class="col-md-3">
             <div class="card gedf-card">
                 <div class="card-body">

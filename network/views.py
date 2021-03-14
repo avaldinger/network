@@ -7,11 +7,13 @@ from django import forms
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, Row, Column
 from datetime import datetime
+import json
+from django.views.decorators.csrf import csrf_exempt
 
-from .models import User, Post
+from .models import User, Post, Follow
 
+# Input form for creating a new Post
 class PostForm(forms.ModelForm):
-    # description = forms.CharField(widget=forms.Textarea)
 
     class Meta:
         model = Post
@@ -47,9 +49,12 @@ class PostForm(forms.ModelForm):
 
 
 def index(request):
+    # Form to create post
     form =  PostForm()
-    posts = Post.objects.all()
+    # Get all existing posts
+    posts = Post.objects.all().order_by('-creationDate')
     username = request.user
+    # Get User info to use in the HTML
     user = User.objects.get(username=username.username)
     return render(request, "network/index.html", {
         "posts": posts, "user": user, "form": form
@@ -132,10 +137,31 @@ def createpost(request):
     return HttpResponse("From Received")
 
 def loadProfile(request, username):
-    print(username)
+    # Get profile
     userInfo = User.objects.get(username=username)
-    print(userInfo.username)
-    posts = Post.objects.filter(username=userInfo.id)
+    # Check if profile followed by the user
+    followed = Follow.objects.filter(followedBy=userInfo.id)
+    # Get posts for the profile
+    posts = Post.objects.filter(username=userInfo.id).order_by('-creationDate')
     return render(request, "network/profile.html", {
-        "posts": posts, "userInfo": userInfo
+        "posts": posts, "userInfo": userInfo, "followed": followed
     })
+
+@csrf_exempt
+def follow(request):
+    print("following")
+    print(request.method)
+    body_unicode = request.body.decode('utf-8')
+    print(request.body)
+    # data = json.loads(request.body)
+    # print(data)
+    return HttpResponse("JSON received...")
+    # return redirect('loadProfile', username=username)
+
+
+
+def following(request):
+    user = request.user
+    followed = Follow.objects.filter(followedBy=user.id)
+    print(followed)
+    return render(request, "network/following.html")
