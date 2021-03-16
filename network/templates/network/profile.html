@@ -32,9 +32,9 @@
                 {{userInfo.id}}
                 {% if userInfo.username !=  user.username %}
                     {% if followed.followedBy.id == user.id %}
-                        <a href=""><button type="submit" class="btn btn-primary">Unfollow</button></a>
+                        <a href="" id="unfollow" onclick="return follow(this.id)"><button type="submit" class="btn btn-primary">Unfollow</button></a>
                     {% else %}
-                        <a href=""  onclick="return follow()"><button type="submit" class="btn btn-primary">Follow</button></a>
+                        <a href=""  id="follow" onclick="return follow(this.id)"><button type="submit" class="btn btn-primary">Follow</button></a>
                     {% endif %}
                 {% endif %}
                 <p id="myP"></p>
@@ -99,12 +99,13 @@
                 console.log(baseURL)
 
 
-                function follow() {
+                function follow(val) {
                     fetch('/follow', {
                     method: 'POST',
                     body: JSON.stringify({
                         user: {{userInfo.id}},
-                        followedBy: {{ user.id }}
+                        followedBy: {{ user.id }},
+                        status: val
                     })
                     })
                     .then(response => response.json())
