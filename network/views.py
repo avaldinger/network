@@ -136,27 +136,44 @@ def createpost(request):
         return HttpResponse("Incorrect input")
     return HttpResponse("From Received")
 
-def loadProfile(request, username):
+def loadProfile(request, username, user):
     # Get profile
     userInfo = User.objects.get(username=username)
+    follower = User.objects.get(username=user)
     # Check if profile followed by the user
-    followed = Follow.objects.filter(followedBy=userInfo.id)
+    followed = Follow.objects.filter(user=userInfo.id, followedBy=follower)
+    followedBy = ""
+    print(f"Followedby: {followed}")
+    if followed:
+        followedBy = followed[0]
     # Get posts for the profile
     posts = Post.objects.filter(username=userInfo.id).order_by('-creationDate')
     return render(request, "network/profile.html", {
-        "posts": posts, "userInfo": userInfo, "followed": followed
+        "posts": posts, "userInfo": userInfo, "followed": followedBy
     })
 
 @csrf_exempt
 def follow(request):
-    print("following")
-    print(request.method)
-    body_unicode = request.body.decode('utf-8')
-    print(request.body)
-    # data = json.loads(request.body)
-    # print(data)
+    # Get JSON Object passed by the JS function from the front-end
+    data = json.loads(request.body)
+    print(data["user"])
+    print(data["followedBy"])
+    username = User.objects.get(pk=data["user"])
+    print(username)
+    followedBy = User.objects.filter(id=data["followedBy"])
+    print(followedBy[0].username)
+    follower = followedBy[0].username
+    # Add entry to DB if following
+    if data["status"] == "follow":
+        newFollow = Follow(user=data["user"], followedBy=followedBy[0], timestamp=datetime.now())
+        newFollow.save()
+        print("saved")
+    # Remove entry from DB if unfollowing
+    if data["status"] == "unfollow":
+        Follow.objects.filter(user=data["user"], followedBy=followedBy[0]).delete()
+        print("deleted")
     return HttpResponse("JSON received...")
-    # return redirect('loadProfile', username=username)
+    # return redirect('loadProfile', username=username, user=follower)
 
 
 
