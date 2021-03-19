@@ -25,7 +25,7 @@ class Post(models.Model):
     likes = models.IntegerField(default=0)
 
     def __str__(self):
-        return f"Post id: {self.id}; created by: {self.username}"
+        return f"Post id: {self.id}; created by: {self.username} title: {self.title}"
 
     def serialize(self):
         return {

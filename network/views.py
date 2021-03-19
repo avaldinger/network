@@ -53,6 +53,7 @@ def index(request):
     form =  PostForm()
     # Get all existing posts
     posts = Post.objects.all().order_by('-creationDate')
+    print(posts)
     username = request.user
     # Get User info to use in the HTML
     user = User.objects.get(username=username.username)
@@ -138,12 +139,13 @@ def createpost(request):
 
 def loadProfile(request, username, user):
     # Get profile
+    # print("Loading profile...")
     userInfo = User.objects.get(username=username)
     follower = User.objects.get(username=user)
     # Check if profile followed by the user
     followed = Follow.objects.filter(user=userInfo.id, followedBy=follower)
     followedBy = ""
-    print(f"Followedby: {followed}")
+    # print(f"Followedby: {followed}")
     if followed:
         followedBy = followed[0]
     # Get posts for the profile
@@ -156,29 +158,39 @@ def loadProfile(request, username, user):
 def follow(request):
     # Get JSON Object passed by the JS function from the front-end
     data = json.loads(request.body)
-    print(data["user"])
-    print(data["followedBy"])
+    # print(data["user"])
+    # print(data["followedBy"])
     username = User.objects.get(pk=data["user"])
-    print(username)
+    # print(username)
     followedBy = User.objects.filter(id=data["followedBy"])
-    print(followedBy[0].username)
+    # print(followedBy[0].username)
     follower = followedBy[0].username
     # Add entry to DB if following
     if data["status"] == "follow":
         newFollow = Follow(user=data["user"], followedBy=followedBy[0], timestamp=datetime.now())
         newFollow.save()
-        print("saved")
+        # print("saved")
     # Remove entry from DB if unfollowing
     if data["status"] == "unfollow":
         Follow.objects.filter(user=data["user"], followedBy=followedBy[0]).delete()
-        print("deleted")
-    return HttpResponse("JSON received...")
-    # return redirect('loadProfile', username=username, user=follower)
+        # print("deleted")
+    # return HttpResponse("JSON received...")
+    return redirect('loadProfile', username=username, user=follower)
 
 
 
 def following(request):
+    # Get the user
     user = request.user
+    # List to store all posters followed by current user
+    userids = []
+    # Get which posters the user is following
     followed = Follow.objects.filter(followedBy=user.id)
-    print(followed)
-    return render(request, "network/following.html")
+    for posters in followed:
+        # Add them into a list
+        userids.append(posters.user)   
+    # Query posts which created by posters who the user is following 
+    posts = Post.objects.filter(username__in=userids)
+    return render(request, "network/following.html", {
+        "posts": posts
+    })

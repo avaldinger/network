@@ -102,7 +102,7 @@
                 console.log(image.src)
                 console.log(baseURL)
 
-
+                // Buggy 2 clicks needed to follow/unfollow...
                 function follow(val) {
                     fetch('/follow', {
                     method: 'POST',
@@ -116,8 +116,7 @@
                     .then(result => {
                         // Print result
                         console.log(result);
-                    });
-                                            
+                    });                                           
 
                 }
 
