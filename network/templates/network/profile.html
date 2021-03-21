@@ -29,11 +29,8 @@
                         <div class="h5">{{userInfo.following}}</div>
                     </li>
                 </ul>
-                {{userInfo.id}}
                 <br>
-               {{ followed.followedBy.id }}
                 {% if userInfo.username !=  user.username %}
-                
                     {% if followed.followedBy.id == user.id %}
                         <a href="" id="unfollow" onclick="return follow(this.id)"><button type="submit" class="btn btn-primary">Unfollow</button></a>
                     {% else %}
@@ -41,7 +38,6 @@
                     {% endif %}
                 
                 {% endif %}
-                <p id="myP"></p>
             </div>
 
         </div>
