@@ -155,7 +155,12 @@ def loadProfile(request, username, user):
     if followed:
         followedBy = followed[0]
     # Get posts for the profile
-    posts = Post.objects.filter(username=userInfo.id).order_by('-creationDate')
+    all_posts = Post.objects.filter(username=userInfo.id).order_by('-creationDate')
+    # Paginate posts
+    paginator = Paginator(all_posts, 10)
+    # Get page number
+    page_number = request.GET.get("page")
+    posts = paginator.get_page(page_number)
     return render(request, "network/profile.html", {
         "posts": posts, "userInfo": userInfo, "followed": followedBy
     })
@@ -196,7 +201,12 @@ def following(request):
         # Add them into a list
         userids.append(posters.user)   
     # Query posts which created by posters who the user is following 
-    posts = Post.objects.filter(username__in=userids)
+    all_posts = Post.objects.filter(username__in=userids)
+    # Paginate posts
+    paginator = Paginator(all_posts, 10)
+    # Get page number
+    page_number = request.GET.get("page")
+    posts = paginator.get_page(page_number)
     return render(request, "network/following.html", {
         "posts": posts
     })

@@ -65,7 +65,7 @@
                 </div>
                 <div class="card-body">
                     <div class="text-muted h7 mb-2"> <i class="fa fa-clock-o"></i>{{ post.creationDate }}</div>
-                    <a class="card-link" href="#">
+                    <a class="card-link" >
                         <h5 class="card-title">{{ post.title }}</h5>
                     </a>
 
@@ -85,6 +85,20 @@
             </div>
             <br>
             {% endfor %}
+
+            <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                {% if posts.has_previous %}
+                  <li class="page-item"><a class="page-link" href="?page={{ posts.previous_page_number }}">Previous</a></li>
+                {% endif %}
+
+                <li class="page-item"><a class="page-link" >{{ posts.number }}</a></li>
+
+                {% if posts.has_next %}
+                  <li class="page-item"><a class="page-link" href="?page={{ posts.next_page_number }}">Next</a></li>
+                {% endif %}
+                </ul>
+              </nav>
             <script>
 
                 window.onload = function() {
