@@ -9,6 +9,7 @@ from crispy_forms.layout import Layout, Submit, Row, Column
 from datetime import datetime
 import json
 from django.views.decorators.csrf import csrf_exempt
+from django.core.paginator import Paginator
 
 from .models import User, Post, Follow
 
@@ -52,8 +53,13 @@ def index(request):
     # Form to create post
     form =  PostForm()
     # Get all existing posts
-    posts = Post.objects.all().order_by('-creationDate')
-    print(posts)
+    all_posts = Post.objects.all().order_by('-creationDate')
+    # Paginate posts
+    paginator = Paginator(all_posts, 10)
+    # Get page number
+    page_number = request.GET.get("page")
+    posts = paginator.get_page(page_number)
+    # print(posts)
     username = request.user
     # Get User info to use in the HTML
     user = User.objects.get(username=username.username)
