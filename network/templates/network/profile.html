@@ -80,7 +80,9 @@
                 </div>
                 <div class="card-footer">
                     <a href="" class="card-link" onclick="return  changeIcon()"><image src="{% static 'network/emptyHeart.png' %}" id="Like" width="20" height="20" alt="Like"></a> {{ post.likes }}
-                    <a href="#" class="card-link"><i class="fa fa-comment"></i> Comment</a>
+                        {% if post.username.username == user.username %}
+                        <a href="#" class="card-link"><i class="fa fa-comment"></i> Edit</a>
+                    {% endif %}
                 </div>
             </div>
             <br>
