@@ -210,3 +210,17 @@ def following(request):
     return render(request, "network/following.html", {
         "posts": posts
     })
+
+@csrf_exempt
+def editPost(request):
+    # Get the user
+    user = request.user
+    print(user)
+    # Get JSON Object passed by the JS function from the front-end
+    data = json.loads(request.body)
+    print(data)
+    print(data["user"])
+    username = User.objects.get(pk=data["user"])
+    print(username)
+    return HttpResponse(status=204)
+
