@@ -221,6 +221,10 @@ def editPost(request):
     print(data)
     print(data["user"])
     username = User.objects.get(pk=data["user"])
-    print(username)
-    return HttpResponse(status=204)
+    print(username.id)
+    if (user == username):
+        # Update post text in the DataBase
+        Post.objects.filter(pk=data["postId"]).update(post=data["post"])
+        return HttpResponse(status=204)
+    return HttpResponse(status=400)
 
