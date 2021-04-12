@@ -106,7 +106,7 @@
                 </div>
                 
                 <div class="card-footer">
-                    <a href="" class="card-link" onclick="return  changeIcon()"><image src="{% static 'network/emptyHeart.png' %}" id="Like" width="20" height="20" alt="Like"></a> {{ post.likes }}
+                    <a href="" class="card-link" id="like{{ post.id }}"><image id="image{{ post.id }}" src="{% static 'network/emptyHeart.png' %}" width="20" height="20" alt="Like"></a> {{ post.likes }}
                     {% if post.username.username == user.username %}
                     <button type="button" class="btn btn-warning" id="edit{{ post.id }}"><i class="fa fa-comment"></i>Edit</button>
                     <button type="button" class="btn btn-warning"  id="save{{ post.id }}" style="display: none"><i class="fa fa-comment"></i>Save</button>
@@ -134,8 +134,8 @@
 
                 var image = document.getElementById("Like")
                 var baseURL = "{% static 'network/FullHeart.png' %}"
-                console.log(image)
-                console.log(image.src)
+                // console.log(image)
+                // console.log(image.src)
                 console.log(baseURL)
 
                 $(document).ready( function() {
@@ -159,7 +159,7 @@
 
                     $('[id^="edit"]').click(function() {
                         //alert("clicked")
-                        alert($(this).attr('id'));
+                        // alert($(this).attr('id'));
                         
                         var edit = $(this).attr('id');
                         var id = edit.substring(4);
@@ -168,11 +168,6 @@
                         var editedText = "editedText" + id;
                         console.log(text)
                         $('#'+text).editable();
-                        // $('#'+text).replaceWith(function() {
-                        //     var result = '<textarea id='+editedText+'>'+$(this).text()+'</textarea>';
-                        //     string = result.replace(/\s+/g, " ");
-                        //     return string;
-                        // });
                         $('#'+text).focus();
                         $('#'+edit).hide();
                         $('#'+save).show();
@@ -181,7 +176,7 @@
 
                     $('[id^="save"]').click(function() {
                         //alert("clicked")
-                        alert($(this).attr('id'));
+                        // alert($(this).attr('id'));
                         
                         var save = $(this).attr('id');
                         var id = save.substring(4);
@@ -198,19 +193,37 @@
                     });
                 });
 
-            
-                function changeIcon() {
-                    if (image.src == "http://127.0.0.1:8000/static/network/emptyHeart.png") {
-                            console.log("Inside")
-                        image.src = "http://127.0.0.1:8000/static/network/FullHeart.png"
+
+                $('[id^="like"]').click(function() {
+                    var like = $(this).attr('id');
+                    var id = like.substring(4);
+                    var image = "image" + id;
+                    var curScr = $('#'+image).attr('src');
+                    // console.log(like)
+                    // console.log(image)
+                    // console.log(curScr)
+                    if (curScr == "/static/network/emptyHeart.png") {
+                        $('#'+image).attr('src', 'http://127.0.0.1:8000/static/network/FullHeart.png');
                         
                     }
                     else{
-                        image.src = "http://127.0.0.1:8000/static/network/emptyHeart.png"
-                        console.log("Else")
+                        $('#'+image).attr('src', 'http://127.0.0.1:8000/static/network/emptyHeart.png');
                     }
                     return false;
-                }
+                });
+
+            
+                // function changeIcon() {
+                //     if (image.src == "http://127.0.0.1:8000/static/network/emptyHeart.png") {
+                //             console.log("Inside")
+                //         image.src = "http://127.0.0.1:8000/static/network/FullHeart.png"
+                //     }
+                //     else{
+                //         image.src = "http://127.0.0.1:8000/static/network/emptyHeart.png"
+                //         console.log("Else")
+                //     }
+                //     return false;
+                // }
             
             </script>
             <!-- Post /////-->
