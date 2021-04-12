@@ -228,3 +228,13 @@ def editPost(request):
         return HttpResponse(status=204)
     return HttpResponse(status=400)
 
+@csrf_exempt
+def updateLike(request):
+    # Get JSON Object passed by the JS function from the front-end
+    data = json.loads(request.body)
+    print(data)
+    username = User.objects.get(pk=data["user"])
+    # if counter = 1 add new like
+    # if counter =  0 remove like
+    return HttpResponse(status=204)
+

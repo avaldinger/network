@@ -141,20 +141,20 @@
                 $(document).ready( function() {
                     function editPost(val, id) {
 
-                    fetch('/editPost', {
-                    method: 'PUT',
-                    body: JSON.stringify({
-                        user: {{user.id}},
-                        postId: id,
-                        post: val
-                    })
-                    })
-                    .then(response => response.json())
-                    .then(result => {
-                        // Print result
-                        console.log(result);
-                    });                                           
-
+                        fetch('/editPost', {
+                        method: 'PUT',
+                        body: JSON.stringify({
+                            user: {{user.id}},
+                            postId: id,
+                            post: val
+                        })
+                        })
+                        .then(response => response.json())
+                        .then(result => {
+                            // Print result
+                            console.log(result);
+                    });    
+                    
                 }
 
                     $('[id^="edit"]').click(function() {
@@ -194,36 +194,49 @@
                 });
 
 
+                function updateLike(id, update) {
+
+                    fetch('/updateLike', {
+                    method: 'PUT',
+                    body: JSON.stringify({
+                        user: {{user.id}},
+                        postId: id,
+                        counter: update
+                    })
+                    })
+                    .then(response => response.json())
+                    .then(result => {
+                        // Print result
+                        console.log(result);
+                    });
+                } 
+
+
                 $('[id^="like"]').click(function() {
                     var like = $(this).attr('id');
                     var id = like.substring(4);
                     var image = "image" + id;
-                    var curScr = $('#'+image).attr('src');
+                    var curScr = $('#'+image).prop('src');
+                    var update = 0;
                     // console.log(like)
                     // console.log(image)
-                    // console.log(curScr)
-                    if (curScr == "/static/network/emptyHeart.png") {
+                    console.log(curScr)
+                    if (curScr == "http://127.0.0.1:8000/static/network/emptyHeart.png") {
                         $('#'+image).attr('src', 'http://127.0.0.1:8000/static/network/FullHeart.png');
+                        update = 1;
+                        console.log(update);
+                        updateLike(id, update);
+                        return false;
                         
                     }
                     else{
                         $('#'+image).attr('src', 'http://127.0.0.1:8000/static/network/emptyHeart.png');
+                        updateLike(id, update);
+                        console.log(update);
+                        return false;
                     }
                     return false;
                 });
-
-            
-                // function changeIcon() {
-                //     if (image.src == "http://127.0.0.1:8000/static/network/emptyHeart.png") {
-                //             console.log("Inside")
-                //         image.src = "http://127.0.0.1:8000/static/network/FullHeart.png"
-                //     }
-                //     else{
-                //         image.src = "http://127.0.0.1:8000/static/network/emptyHeart.png"
-                //         console.log("Else")
-                //     }
-                //     return false;
-                // }
             
             </script>
             <!-- Post /////-->
