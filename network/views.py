@@ -11,7 +11,7 @@ import json
 from django.views.decorators.csrf import csrf_exempt
 from django.core.paginator import Paginator
 
-from .models import User, Post, Follow
+from .models import User, Post, Follow, Like
 
 # Input form for creating a new Post
 class PostForm(forms.ModelForm):
@@ -222,7 +222,7 @@ def editPost(request):
     print(data["user"])
     username = User.objects.get(pk=data["user"])
     print(username.id)
-    if (user == username):
+    if user == username:
         # Update post text in the DataBase
         Post.objects.filter(pk=data["postId"]).update(post=data["post"])
         return HttpResponse(status=204)
@@ -234,7 +234,18 @@ def updateLike(request):
     data = json.loads(request.body)
     print(data)
     username = User.objects.get(pk=data["user"])
-    # if counter = 1 add new like
-    # if counter =  0 remove like
-    return HttpResponse(status=204)
+    post = Post.objects.get(pk=data["postId"])
+    counter = data["counter"]
+    currentLikes = post.likes
+    if counter > 0:
+        currentLikes =+ 1
+        Post.objects.filter(pk=data["postId"]).update(likes=currentLikes)
+        liked = Like(likedBy=username, post=post, liked=True, timestamp=datetime.now())
+        liked.save()
+        return HttpResponse(status=204)
+    else:
+        post.update(likes=currentLikes)
+        Liked.objects.filter(likedBy=username, post=post).delete()
+        return HttpResponse(status=204)
+    return HttpResponse(status=400)
 
