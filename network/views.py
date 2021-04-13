@@ -237,15 +237,18 @@ def updateLike(request):
     post = Post.objects.get(pk=data["postId"])
     counter = data["counter"]
     currentLikes = post.likes
+    print(currentLikes)
     if counter > 0:
-        currentLikes =+ 1
+        currentLikes += 1
         Post.objects.filter(pk=data["postId"]).update(likes=currentLikes)
         liked = Like(likedBy=username, post=post, liked=True, timestamp=datetime.now())
         liked.save()
         return HttpResponse(status=204)
     else:
-        post.update(likes=currentLikes)
-        Liked.objects.filter(likedBy=username, post=post).delete()
+        currentLikes -= 1
+        print(currentLikes)
+        Post.objects.filter(pk=data["postId"]).update(likes=currentLikes)
+        Like.objects.filter(likedBy=username, post=post).delete()
         return HttpResponse(status=204)
     return HttpResponse(status=400)
 

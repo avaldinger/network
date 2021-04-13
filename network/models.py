@@ -39,12 +39,12 @@ class Post(models.Model):
 
 class Like(models.Model):
     likedBy = models.ForeignKey("User", on_delete=models.CASCADE, related_name="likes")
-    post = models.ForeignKey("Post", default=None, on_delete=models.CASCADE)
+    post = models.ForeignKey("Post", default=None, on_delete=models.CASCADE, related_name="likedPosts")
     liked = models.BooleanField(default=False)
     timestamp = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"Like id: {self.id}; Liked by: {self.likedBy}"
+        return f"Like id: {self.id}; Post id: {self.post}; Liked by: {self.likedBy}"
     
     def serialize(self):
         return {

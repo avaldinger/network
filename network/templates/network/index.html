@@ -106,7 +106,15 @@
                 </div>
                 
                 <div class="card-footer">
+                    {% if post.likedPosts.all %}
+                        {% for x in post.likedPosts.all %}
+                            {% if x.likedBy.username == user.username and x.post.id == post.id %}
+                            <a href="" class="card-link" id="like{{ post.id }}"><image id="image{{ post.id }}" src="{% static 'network/FullHeart.png' %}" width="20" height="20" alt="Like"></a> {{ post.likes }}
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
                     <a href="" class="card-link" id="like{{ post.id }}"><image id="image{{ post.id }}" src="{% static 'network/emptyHeart.png' %}" width="20" height="20" alt="Like"></a> {{ post.likes }}
+                    {% endif %}
                     {% if post.username.username == user.username %}
                     <button type="button" class="btn btn-warning" id="edit{{ post.id }}"><i class="fa fa-comment"></i>Edit</button>
                     <button type="button" class="btn btn-warning"  id="save{{ post.id }}" style="display: none"><i class="fa fa-comment"></i>Save</button>
