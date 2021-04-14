@@ -10,6 +10,7 @@ from datetime import datetime
 import json
 from django.views.decorators.csrf import csrf_exempt
 from django.core.paginator import Paginator
+from django.contrib.auth.decorators import login_required
 
 from .models import User, Post, Follow, Like
 
@@ -255,4 +256,16 @@ def updateLike(request):
         Like.objects.filter(likedBy=username, post=post).delete()
         return HttpResponse(status=204)
     return HttpResponse(status=400)
+
+@csrf_exempt
+@login_required
+def getLikes(request, postId):
+
+    try:
+        post = Post.objects.get(pk=postId)
+    except Post.DoesNotExist:
+        return JsonResponse({"error: Post with id {postId} doesn't exists"}, status=404)
+
+    return JsonResponse(post.serialize())
+    
 

@@ -109,11 +109,11 @@
                     {% if post.likedPosts.all %}
                         {% for x in post.likedPosts.all %}
                             {% if x.likedBy.username == user.username and x.post.id == post.id %}
-                            <a href="" class="card-link" id="like{{ post.id }}"><image id="image{{ post.id }}" src="{% static 'network/FullHeart.png' %}" width="20" height="20" alt="Like"></a> {{ post.likes }}
+                            <a href="" class="card-link" id="like{{ post.id }}"><image id="image{{ post.id }}" src="{% static 'network/FullHeart.png' %}" width="20" height="20" alt="Like"></a> <span id="numlikes{{ post.id }}">{{ post.likes }}</span>
                             {% endif %}
                         {% endfor %}
                     {% else %}
-                    <a href="" class="card-link" id="like{{ post.id }}"><image id="image{{ post.id }}" src="{% static 'network/emptyHeart.png' %}" width="20" height="20" alt="Like"></a> {{ post.likes }}
+                    <a href="" class="card-link" id="like{{ post.id }}"><image id="image{{ post.id }}" src="{% static 'network/emptyHeart.png' %}" width="20" height="20" alt="Like"></a> <span id="numlikes{{ post.id }}">{{ post.likes }}</span>
                     {% endif %}
                     {% if post.username.username == user.username %}
                     <button type="button" class="btn btn-warning" id="edit{{ post.id }}"><i class="fa fa-comment"></i>Edit</button>
@@ -219,6 +219,20 @@
                     });
                 } 
 
+                function getLikes(postId) {
+                    console.log("start..");
+                    fetch('/getLikes/' + postId)
+                    .then(response => response.json())
+                    .then(likes => {
+                        console.log(likes);
+                        var id = "numlikes" + postId
+                        console.log(likes.likes);
+                        $('#'+id).html(likes.likes);
+                    });
+                    console.log("function");
+
+                }
+
 
                 $('[id^="like"]').click(function() {
                     var like = $(this).attr('id');
@@ -234,6 +248,8 @@
                         update = 1;
                         console.log(update);
                         updateLike(id, update);
+                        setTimeout(getLikes, 100, id);
+                        // getLikes(id);
                         return false;
                         
                     }
@@ -241,6 +257,8 @@
                         $('#'+image).attr('src', 'http://127.0.0.1:8000/static/network/emptyHeart.png');
                         updateLike(id, update);
                         console.log(update);
+                        setTimeout(getLikes, 100, id);
+                        //getLikes(id);
                         return false;
                     }
                     return false;

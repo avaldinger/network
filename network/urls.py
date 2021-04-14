@@ -16,5 +16,6 @@ urlpatterns = [
     # API path
     path("follow", views.follow, name="follow"),
     path("editPost", views.editPost, name="editPost"),
-    path("updateLike", views.updateLike, name="updateLike")
+    path("updateLike", views.updateLike, name="updateLike"), 
+    path("getLikes/<int:postId>", views.getLikes, name="getLikes")
 ]
