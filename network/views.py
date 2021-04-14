@@ -48,7 +48,7 @@ class PostForm(forms.ModelForm):
             Submit('submit', 'Post')
         )
 
-
+@login_required
 def index(request):
     # Form to create post
     form =  PostForm()
@@ -119,6 +119,7 @@ def register(request):
     else:
         return render(request, "network/register.html")
 
+@login_required
 def posts(request, post_id):
     try:
         post = Post.objects.get(pk=post_id)
@@ -126,7 +127,7 @@ def posts(request, post_id):
         return JsonResponse({"error": "Post doesn't exixts"}, status = 404)
     return JsonResponse(post.serialize())
 
-
+@login_required
 def createpost(request):
     if request.method == "POST":
         form = PostForm(request.POST)
@@ -143,6 +144,7 @@ def createpost(request):
         return HttpResponse("Incorrect input")
     return HttpResponse("From Received")
 
+@login_required
 def loadProfile(request, username, user):
     # Get profile
     # print("Loading profile...")
@@ -189,7 +191,7 @@ def follow(request):
     return redirect('loadProfile', username=username, user=follower)
 
 
-
+@login_required
 def following(request):
     # Get the user
     user = request.user
@@ -212,6 +214,7 @@ def following(request):
     })
 
 @csrf_exempt
+@login_required
 def editPost(request):
     # Get the user
     user = request.user
@@ -229,6 +232,7 @@ def editPost(request):
     return HttpResponse(status=400)
 
 @csrf_exempt
+@login_required
 def updateLike(request):
     # Get JSON Object passed by the JS function from the front-end
     data = json.loads(request.body)
